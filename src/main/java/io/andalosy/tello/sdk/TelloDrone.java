@@ -41,16 +41,8 @@ public class TelloDrone {
         this.telloDroneCommander.controlCommand("command");
     }
 
-    public void sdkVersion() throws IOException {
-        this.telloDroneCommander.readCommand("sdk?");
-    }
-
-    public void serialNo() throws IOException {
-        this.telloDroneCommander.readCommand("sn?");
-    }
-
-    public void wifiName() throws IOException {
-        this.telloDroneCommander.readCommand("wifi?");
+    public String wifiName() throws IOException {
+        return this.telloDroneCommander.readString("wifi?");
     }
 
     //////////////////////////////////
@@ -133,29 +125,29 @@ public class TelloDrone {
     //////////////////////////////////
     // video
 
-    private void videoStart() throws TelloException, IOException {
+    public void videoStart() throws TelloException, IOException {
         this.telloDroneCommander.controlCommand("streamon");
     }
 
-    private void videoStop() throws TelloException, IOException {
+    public void videoStop() throws TelloException, IOException {
         this.telloDroneCommander.controlCommand("streamoff");
     }
 
     //////////////////////////////////
     // emergency
 
-    private void halt() throws TelloException, IOException {
+    public void halt() throws TelloException, IOException {
         this.telloDroneCommander.controlCommand("emergency");
     }
 
     //////////////////////////////////
     // navigation
 
-    private void hover() throws TelloException, IOException {
+    public void hover() throws TelloException, IOException {
         this.telloDroneCommander.controlCommand("stop");
     }
 
-    private void position(TelloPosition position, int speed) throws TelloException, IOException {
+    public void position(TelloPosition position, int speed) throws TelloException, IOException {
         this.telloDroneCommander.controlCommand(
                 String.format("go %d %d %d %d",
                         position.getX(),
@@ -164,7 +156,7 @@ public class TelloDrone {
                         speed));
     }
 
-    private void curve(TelloPosition start, TelloPosition end, int speed) throws TelloException, IOException {
+    public void curve(TelloPosition start, TelloPosition end, int speed) throws TelloException, IOException {
         this.telloDroneCommander.controlCommand(
                 String.format("curve %d %d %d %d %d %d %d",
                         start.getX(), start.getY(), start.getZ(),
@@ -177,24 +169,25 @@ public class TelloDrone {
     // not clear to me if it is present anymore?
 
     public TelloState state() throws IOException {
+        //pitch:0;roll:0;yaw:0;vgx:0;vgy:0;vgz:0;templ:86;temph:89;tof:10;h:0;bat:43;baro:211.54;time:0;agx:-4.00;agy:1.00;agz:-1000.00;
         String reply = this.telloStateCommander.listenToData();
         return TelloReplyParser.status(reply);
     }
 
     public int height() throws IOException {
-        return this.telloDroneCommander.readCommand("height?");
+        return this.telloDroneCommander.readInteger("height?");
     }
 
     public int speed() throws IOException {
-        return this.telloDroneCommander.readCommand("Speed?");
+        return this.telloDroneCommander.readInteger("speed?");
     }
 
     public int battery() throws IOException {
-        return this.telloDroneCommander.readCommand("Battery?");
+        return this.telloDroneCommander.readInteger("battery?");
     }
 
     public int flightTime() throws IOException {
-        return this.telloDroneCommander.readCommand("Time?");
+        return this.telloDroneCommander.readInteger("time?");
     }
 
 }
