@@ -13,31 +13,35 @@ public class TelloCommander {
     ///////////////////////////////////
     // Internals
 
-    private String order(String command) throws IOException {
-        this.telloChannel.send(command.getBytes());
-        byte[] reply = this.telloChannel.receive();
-        return new String(reply).trim();
+    private boolean isOk(String reply){
+        return !reply.contains("error");
     }
 
-    public void controlCommand(String commandString) throws TelloException, IOException {
-        String reply = order(commandString);
-
-        if(TelloReplyParser.success(reply)){
-            throw new TelloException("Failed to execute command : " + commandString + ", drone reply was: " + reply);
+    public TelloAnswer command(String command){
+        try {
+            this.telloChannel.send(command.getBytes());
+            return answer();
+        }
+        catch (IOException e) {
+            return new TelloAnswer(false, "Error in drone communication : " + e.getMessage());
         }
     }
 
-    public int readInteger(String commandString) throws IOException {
-        String reply = order(commandString);
-        return TelloReplyParser.number(reply);
-    }
+    public TelloAnswer answer() {
+        try {
+            byte[] reply = this.telloChannel.receive();
+            String answer = new String(reply).trim();
 
-    public String readString(String commandString) throws IOException {
-        return order(commandString);
-    }
+            if(isOk(answer) == false) {
+                // drone says something is not right!
+                return new TelloAnswer(false, "Invalid drone answer : " + answer);
+            }
 
-    public String listenToData() throws IOException {
-        byte[] reply = this.telloChannel.receive();
-        return new String(reply);
+            return new TelloAnswer(answer);
+        }
+        catch (IOException e) {
+            // networking issue
+            return new TelloAnswer(false, "Error in drone communication : " + e.getMessage());
+        }
     }
 }
