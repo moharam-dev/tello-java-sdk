@@ -16,7 +16,7 @@ public class TelloCommander {
     private String order(String command) throws IOException {
         this.telloChannel.send(command.getBytes());
         byte[] reply = this.telloChannel.receive();
-        return new String(reply);
+        return new String(reply).trim();
     }
 
     public void controlCommand(String commandString) throws TelloException, IOException {
@@ -27,9 +27,13 @@ public class TelloCommander {
         }
     }
 
-    public int readCommand(String commandString) throws IOException {
+    public int readInteger(String commandString) throws IOException {
         String reply = order(commandString);
         return TelloReplyParser.number(reply);
+    }
+
+    public String readString(String commandString) throws IOException {
+        return order(commandString);
     }
 
     public String listenToData() throws IOException {
