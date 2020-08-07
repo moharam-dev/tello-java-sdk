@@ -18,16 +18,12 @@ public class DroneTello implements Drone {
     // configuration
 
     public boolean arm() {
-        if (this.droneCommandChannel.reachable()) {
-            sdkMode();
-            return true;
+        if (this.droneCommandChannel.reachable() == false) {
+            return false;
         }
 
-        return false;
-    }
-
-    public void sdkMode() {
         this.droneCommandChannel.command("command");
+        return true;
     }
 
     public Answer wifiSignal()  {

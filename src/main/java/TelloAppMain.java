@@ -19,6 +19,8 @@ public class TelloAppMain {
                     new ChannelDroneTello(DRONE_ADDRESS, DRONE_PORT),
                     new ChannelDroneTello(STATE_ADDRESS, STATE_PORT));
 
+            drone.arm(); // this is a must!!
+
             Drone.State state = drone.state();
             state.throwsOnError();
             int batteryLevel = state.batteryLevel();

@@ -2,15 +2,13 @@ package io.andalosy.tello.sdk;
 
 public interface Drone {
     boolean arm();
-    void sdkMode();
 
-    Answer wifiSignal();
-
+    // control commands
     Answer takeoff();
     Answer land();
     Answer halt();
-
     Answer hover();
+
     Answer position(Position position, int speed);
     Answer curve(Position start, Position end, int speed);
     Answer speed(int centimeterPerSecond);
@@ -30,6 +28,7 @@ public interface Drone {
     Answer flipForward();
     Answer flipBackward();
 
+    // camera an media
     Answer videoStart();
     Answer videoStop();
     Answer rtpToAwsMediaLive(String awsRtpInput);
@@ -37,6 +36,7 @@ public interface Drone {
     // telemetry
     State state();
     Answer speed();
+    Answer wifiSignal();
 
     // data exchange classes
     class Position {
