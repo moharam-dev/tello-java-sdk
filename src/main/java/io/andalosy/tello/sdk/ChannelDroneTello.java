@@ -7,13 +7,13 @@ import java.net.*;
 import java.time.Duration;
 import java.time.Instant;
 
-public class TelloChannel {
+public class ChannelDroneTello implements ChannelDrone {
     private final DatagramSocket droneSocket;
     private final InetAddress droneAddress;
     private final int dronePort;
     private final DescriptiveStatistics commStats;
 
-    public TelloChannel(String droneIp, int dronePort) throws SocketException, UnknownHostException {
+    public ChannelDroneTello(String droneIp, int dronePort) throws SocketException, UnknownHostException {
         this.droneSocket = new DatagramSocket(dronePort);
         this.droneSocket.setSoTimeout(10000);
         this.droneAddress = InetAddress.getByName(droneIp);
@@ -43,7 +43,7 @@ public class TelloChannel {
         this.droneSocket.send(commandPacket);
     }
 
-    public double averageCommunicationTime(){
+    public double averageReceiveTimeMillis(){
         return commStats.getPercentile(90);
     }
 }

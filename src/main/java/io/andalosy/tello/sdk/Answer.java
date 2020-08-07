@@ -1,15 +1,15 @@
 package io.andalosy.tello.sdk;
 
-public class TelloAnswer {
+public class Answer {
     private boolean result;
     private String value;
 
-    public TelloAnswer(boolean result, String value){
+    public Answer(boolean result, String value){
         this.result = result;
         this.value = value;
     }
 
-    public TelloAnswer(String value){
+    public Answer(String value){
         this.result = true;
         this.value = value;
     }
@@ -26,8 +26,8 @@ public class TelloAnswer {
         return Integer.parseInt(value);
     }
 
-    TelloState valueAsState(){
-        return new TelloState(value);
+    public State valueAsState(){
+        return new State(value);
     }
 
     public void validate() throws Exception{
@@ -35,5 +35,4 @@ public class TelloAnswer {
             throw new Exception(value);
         }
     }
-
 }

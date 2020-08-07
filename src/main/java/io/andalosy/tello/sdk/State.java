@@ -1,6 +1,9 @@
 package io.andalosy.tello.sdk;
 
-public class TelloState {
+public class State {
+    private boolean isValid;
+    private String origin;
+
     private int height;
 
     private int pitch;
@@ -24,8 +27,9 @@ public class TelloState {
     private float barometer;
     private int motorTime;
 
-    public TelloState(String reply){
-        parse(reply);
+    public State(String reply){
+        origin = reply;
+        isValid = parse(reply);
     }
 
     // internals
@@ -86,12 +90,20 @@ public class TelloState {
         }
     }
 
-    private void parse(String reply) {
-        reply = reply.trim();
-        String[] tokens = reply.split("[;]");
-        for(String token : tokens){
-            String[] fieldAndValue = token.split("[:]");
-            set(fieldAndValue[0], fieldAndValue[1]);
+    private boolean parse(String reply) {
+        try {
+            reply = reply.trim();
+            String[] tokens = reply.split("[;]");
+            for (String token : tokens) {
+                String[] fieldAndValue = token.split("[:]");
+                set(fieldAndValue[0], fieldAndValue[1]);
+            }
+
+            return true;
+        }
+        catch(Exception err){
+            System.out.println("Invalid drone state :" + reply);
+            return false;
         }
     }
 
@@ -116,4 +128,10 @@ public class TelloState {
     public int batteryLevel() {   return batteryLevel; }
     public float barometer() {   return barometer; }
     public int motorTime() {   return motorTime; }
+
+    public void validate() throws Exception{
+        if(isValid == false){
+            throw new Exception("Invalid drone state: " + origin);
+        }
+    }
 }
