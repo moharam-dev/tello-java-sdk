@@ -15,17 +15,9 @@ public class TelloAppMain {
 
         try {
             ChannelDrone droneCommandChannel = new ChannelDroneTello(DRONE_ADDRESS, DRONE_PORT);
-            CommanderDrone droneCommander = new CommanderDroneTello(droneCommandChannel);
-
             ChannelDrone droneStateChannel = new ChannelDroneTello(STATE_ADDRESS, STATE_PORT);
-            CommanderDrone droneStateCommander = new CommanderDroneTello(droneStateChannel);
 
-            Drone drone = new DroneTello(
-                    droneCommandChannel,
-                    droneCommander,
-                    droneStateChannel,
-                    droneStateCommander
-            );
+            Drone drone = new DroneTello(droneCommandChannel, droneStateChannel);
 
             Answer answer;
 

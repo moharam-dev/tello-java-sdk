@@ -4,106 +4,108 @@ import java.io.IOException;
 
 public class DroneTello implements Drone {
     private ChannelDrone droneCommandChannel;
-    private CommanderDrone droneCommander;
-
     private ChannelDrone droneStateChannel;
-    private CommanderDrone droneStateCommander;
 
     public DroneTello(  ChannelDrone droneCommandChannel,
-                        CommanderDrone droneCommander,
-                        ChannelDrone droneStateChannel,
-                        CommanderDrone droneStateCommander) {
+                        ChannelDrone droneStateChannel
+                        ) {
 
         this.droneCommandChannel = droneCommandChannel;
-        this.droneCommander = droneCommander;
         this.droneStateChannel = droneStateChannel;
-        this.droneStateCommander = droneStateCommander;
     }
 
     //////////////////////////////////
     // configuration
 
     public boolean arm() {
-        try {
-            if (this.droneCommandChannel.reachable()) {
-                sdkMode();
-                return true;
-            }
-        }
-        catch (IOException e) {
-            System.out.println("-- Communication error: " + e.getMessage());
+        if (this.droneCommandChannel.reachable()) {
+            sdkMode();
+            return true;
         }
 
         return false;
     }
 
     public void sdkMode() {
-        this.droneCommander.command("command");
+        this.droneCommandChannel.command("command");
     }
 
     public Answer wifiSignal()  {
-        return this.droneCommander.command("wifi?");
+        String reply = droneCommandChannel.command("wifi?");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
     // commands
 
     public Answer takeoff() {
-        return this.droneCommander.command("takeoff");
+        String reply = this.droneCommandChannel.command("takeoff");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer land() {
-        return this.droneCommander.command("land");
+        String reply = this.droneCommandChannel.command("land");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer speed(int centimeterPerSecond) {
-        return this.droneCommander.command(String.format("speed %d", centimeterPerSecond));
+        String reply = this.droneCommandChannel.command(String.format("speed %d", centimeterPerSecond));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
 
     public Answer up(int centimeters) {
-        return this.droneCommander.command(String.format("up %d", centimeters));
+        String reply = this.droneCommandChannel.command(String.format("up %d", centimeters));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer down(int centimeters) {
-        return this.droneCommander.command(String.format("down %d", centimeters));
+        String reply = this.droneCommandChannel.command(String.format("down %d", centimeters));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
 
     public Answer left(int centimeters) {
-        return this.droneCommander.command(String.format("left %d", centimeters));
+        String reply = this.droneCommandChannel.command(String.format("left %d", centimeters));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer right(int centimeters) {
-        return this.droneCommander.command(String.format("right %d", centimeters));
+        String reply = this.droneCommandChannel.command(String.format("right %d", centimeters));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
 
     public Answer forward(int centimeters) {
-        return this.droneCommander.command(String.format("forward %d", centimeters));
+        String reply = this.droneCommandChannel.command(String.format("forward %d", centimeters));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer backward(int centimeters) {
-        return this.droneCommander.command(String.format("back %d", centimeters));
+        String reply = this.droneCommandChannel.command(String.format("back %d", centimeters));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
 
     public Answer rotateClockwise(int degrees) {
-        return this.droneCommander.command(String.format("cw %d", degrees));
+        String reply = this.droneCommandChannel.command(String.format("cw %d", degrees));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer rotateCounterClockwise(int degrees) {
-        return this.droneCommander.command(String.format("ccw %d", degrees));
+        String reply = this.droneCommandChannel.command(String.format("ccw %d", degrees));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
 
     private Answer flip(String direction) {
-        return this.droneCommander.command("flip " + direction);
+        String reply = this.droneCommandChannel.command("flip " + direction);
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer flipLeft() {
@@ -126,42 +128,48 @@ public class DroneTello implements Drone {
     // video
 
     public Answer videoStart() {
-        return this.droneCommander.command("streamon");
+        String reply = this.droneCommandChannel.command("streamon");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer videoStop(){
-        return this.droneCommander.command("streamoff");
+        String reply = this.droneCommandChannel.command("streamoff");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
     // emergency
 
     public Answer halt() {
-        return this.droneCommander.command("emergency");
+        String reply = this.droneCommandChannel.command("emergency");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
     // navigation
 
     public Answer hover() {
-        return this.droneCommander.command("stop");
+        String reply = this.droneCommandChannel.command("stop");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer position(DronePosition position, int speed) {
-        return this.droneCommander.command(
+        String reply = this.droneCommandChannel.command(
                 String.format("go %d %d %d %d",
                         position.getX(),
                         position.getY(),
                         position.getZ(),
                         speed));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     public Answer curve(DronePosition start, DronePosition end, int speed) {
-        return this.droneCommander.command(
+        String reply = this.droneCommandChannel.command(
                 String.format("curve %d %d %d %d %d %d %d",
                         start.getX(), start.getY(), start.getZ(),
                         end.getX(), end.getY(), end.getZ(),
                         speed));
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
     //////////////////////////////////
@@ -169,13 +177,14 @@ public class DroneTello implements Drone {
     // not clear to me if it is present anymore?
 
     public State state()  {
-        //pitch:0;roll:0;yaw:0;vgx:0;vgy:0;vgz:0;templ:86;temph:89;tof:10;h:0;bat:43;baro:211.54;time:0;agx:-4.00;agy:1.00;agz:-1000.00;
-        Answer answer = this.droneStateCommander.answerWithoutCommand();
+        String reply = this.droneStateChannel.answer();
+        Answer answer = new Answer(droneCommandChannel.isOk(reply), reply) ;
         return answer.valueAsState();
     }
 
     public Answer speed()  {
-        return this.droneCommander.command("speed?");
+        String reply = this.droneCommandChannel.command("speed?");
+        return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 }
 

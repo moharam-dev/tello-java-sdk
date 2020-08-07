@@ -21,8 +21,15 @@ public class ChannelDroneTello implements ChannelDrone {
         this.commStats = new DescriptiveStatistics();
     }
 
-    public boolean reachable() throws IOException {
-        return this.droneAddress.isReachable(10000);
+    public boolean reachable() {
+        try {
+            this.droneAddress.isReachable(10000);
+            return true;
+
+        } catch (IOException e) {
+            System.out.println("Error reaching drone ip!");
+            return false;
+        }
     }
 
     public byte[] receive() throws IOException {
@@ -45,5 +52,32 @@ public class ChannelDroneTello implements ChannelDrone {
 
     public double averageReceiveTimeMillis(){
         return commStats.getPercentile(90);
+    }
+
+    ///////////////////
+
+    public boolean isOk(String reply){
+        return !reply.contains("error");
+    }
+
+    public String command(String command){
+        try {
+            send(command.getBytes());
+            return answer();
+        }
+        catch (IOException e) {
+            return "error in drone communication : " + e.getMessage();
+        }
+    }
+
+    public String answer() {
+        try {
+            byte[] reply = receive();
+            return new String(reply).trim();
+        }
+        catch (IOException e) {
+            // networking issue
+            return "error in drone communication : " + e.getMessage();
+        }
     }
 }
