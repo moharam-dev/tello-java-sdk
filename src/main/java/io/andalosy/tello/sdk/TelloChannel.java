@@ -15,6 +15,7 @@ public class TelloChannel {
 
     public TelloChannel(String droneIp, int dronePort) throws SocketException, UnknownHostException {
         this.droneSocket = new DatagramSocket(dronePort);
+        this.droneSocket.setSoTimeout(10000);
         this.droneAddress = InetAddress.getByName(droneIp);
         this.dronePort = dronePort;
         this.commStats = new DescriptiveStatistics();

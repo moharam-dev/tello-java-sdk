@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class TelloReplyParser {
     public static boolean success(String reply){
-        return "OK".compareTo(reply) == 0;
+        return reply.length() == 2 && "ok".compareTo(reply) == 0;
     }
 
     public static int number(String reply){
