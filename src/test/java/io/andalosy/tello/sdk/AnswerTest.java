@@ -8,7 +8,7 @@ class AnswerTest {
 
     @Test
     void whenNonIntegerValue_assertExceptionIsThrown() {
-        Answer answer = new Answer(false, "koko");
+        Drone.Answer answer = new Drone.Answer(false, "koko");
         Exception exception = assertThrows(NumberFormatException.class, () -> {
             answer.valueAsInteger();
         });

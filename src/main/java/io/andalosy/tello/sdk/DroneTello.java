@@ -164,7 +164,7 @@ public class DroneTello implements Drone {
         return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
-    public Answer position(DronePosition position, int speed) {
+    public Answer position(Position position, int speed) {
         String reply = this.droneCommandChannel.command(
                 String.format("go %d %d %d %d",
                         position.getX(),
@@ -174,7 +174,7 @@ public class DroneTello implements Drone {
         return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
-    public Answer curve(DronePosition start, DronePosition end, int speed) {
+    public Answer curve(Position start, Position end, int speed) {
         String reply = this.droneCommandChannel.command(
                 String.format("curve %d %d %d %d %d %d %d",
                         start.getX(), start.getY(), start.getZ(),

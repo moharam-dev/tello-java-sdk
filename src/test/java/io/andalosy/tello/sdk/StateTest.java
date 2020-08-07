@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StateTest {
     @Test
     void whenStateReply_assertCorrectParsing() {
-        State state = new State("pitch:10;roll:20;yaw:30;vgx:40;vgy:50;vgz:60;templ:86;temph:89;tof:10;h:76;bat:43;baro:211.00;time:80;agx:-4.00;agy:1.00;agz:-1000.00;");
+        Drone.State state = new Drone.State("pitch:10;roll:20;yaw:30;vgx:40;vgy:50;vgz:60;templ:86;temph:89;tof:10;h:76;bat:43;baro:211.00;time:80;agx:-4.00;agy:1.00;agz:-1000.00;");
 
         assertTrue(state.pitch() == 10);
         assertTrue(state.roll() == 20);
