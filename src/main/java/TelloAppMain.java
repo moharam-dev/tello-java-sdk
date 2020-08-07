@@ -14,33 +14,31 @@ public class TelloAppMain {
         final int STATE_PORT = 8890;
 
         try {
-            ChannelDrone droneCommandChannel = new ChannelDroneTello(DRONE_ADDRESS, DRONE_PORT);
-            ChannelDrone droneStateChannel = new ChannelDroneTello(STATE_ADDRESS, STATE_PORT);
 
-            Drone drone = new DroneTello(droneCommandChannel, droneStateChannel);
-
-            Answer answer;
+            Drone drone = new DroneTello(
+                    new ChannelDroneTello(DRONE_ADDRESS, DRONE_PORT),
+                    new ChannelDroneTello(STATE_ADDRESS, STATE_PORT));
 
             State state = drone.state();
-            state.validate();
+            state.throwsOnError();
             int batteryLevel = state.batteryLevel();
 
-            drone.videoStart().validate();
-            drone.takeoff().validate();
+            drone.videoStart().throwsOnError();
+            drone.takeoff().throwsOnError();
 
             // stay in the air till the battery drained!
             while (batteryLevel > 10) {
-                drone.rotateClockwise(360).validate();
-                drone.rotateCounterClockwise(360).validate();
+                drone.rotateClockwise(360).throwsOnError();
+                drone.rotateCounterClockwise(360).throwsOnError();
 
                 state = drone.state();
-                state.validate();
+                state.throwsOnError();
                 batteryLevel = state.batteryLevel();
 
                 System.out.println("Tello battery level is : " + String.valueOf(batteryLevel) + "%");
             }
 
-            drone.land().validate();
+            drone.land().throwsOnError();
         }
         catch (SocketException e) {
             System.out.println("-- Communication error: " + e.getMessage());

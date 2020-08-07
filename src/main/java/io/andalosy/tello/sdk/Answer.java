@@ -26,11 +26,7 @@ public class Answer {
         return Integer.parseInt(value);
     }
 
-    public State valueAsState(){
-        return new State(value);
-    }
-
-    public void validate() throws Exception{
+    public void throwsOnError() throws Exception{
         if(result == false){
             throw new Exception(value);
         }

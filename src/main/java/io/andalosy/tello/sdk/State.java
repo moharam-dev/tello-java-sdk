@@ -129,7 +129,7 @@ public class State {
     public float barometer() {   return barometer; }
     public int motorTime() {   return motorTime; }
 
-    public void validate() throws Exception{
+    public void throwsOnError() throws Exception{
         if(isValid == false){
             throw new Exception("Invalid drone state: " + origin);
         }

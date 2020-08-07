@@ -137,6 +137,17 @@ public class DroneTello implements Drone {
         return new Answer(droneCommandChannel.isOk(reply), reply) ;
     }
 
+    @Override
+    public Answer rtpToAwsMediaLive(String awsRtpInput) {
+        try{
+            String cmd = "sh -c ffmpeg -re -i udp://0.0.0.0:11111 -c copy -map 0 -f rtp_mpegts -fec prompeg=l=5:d=20 " + awsRtpInput;
+            Runtime.getRuntime().exec(cmd);
+            return new Answer("ok");
+        } catch (IOException e) {
+            return new Answer(false, "error failed to run ffmpeg :" + e.getMessage());
+        }
+    }
+
     //////////////////////////////////
     // emergency
 
@@ -177,9 +188,7 @@ public class DroneTello implements Drone {
     // not clear to me if it is present anymore?
 
     public State state()  {
-        String reply = this.droneStateChannel.answer();
-        Answer answer = new Answer(droneCommandChannel.isOk(reply), reply) ;
-        return answer.valueAsState();
+        return new State(this.droneStateChannel.answer());
     }
 
     public Answer speed()  {

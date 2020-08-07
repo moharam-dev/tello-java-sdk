@@ -32,6 +32,7 @@ public interface Drone {
 
     Answer videoStart();
     Answer videoStop();
+    Answer rtpToAwsMediaLive(String awsRtpInput);
 
     // telemetry
     State state();
