@@ -87,6 +87,7 @@ public class TelloState {
     }
 
     private void parse(String reply) {
+        reply = reply.trim();
         String[] tokens = reply.split("[;]");
         for(String token : tokens){
             String[] fieldAndValue = token.split("[:]");
