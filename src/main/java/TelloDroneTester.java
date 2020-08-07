@@ -20,10 +20,6 @@ public class TelloDroneTester {
             telloDrone.videoStart().validate();
             telloDrone.takeoff().validate();
 
-            answer = telloDrone.battery();
-            answer.validate();
-            batteryLevel = answer.valueAsInteger();
-
             // stay in the air till the battery drained!
             while (batteryLevel > 10) {
                 telloDrone.rotateClockwise(360).validate();
