@@ -6,10 +6,7 @@ public class DroneTello implements Drone {
     private ChannelDrone droneCommandChannel;
     private ChannelDrone droneStateChannel;
 
-    public DroneTello(  ChannelDrone droneCommandChannel,
-                        ChannelDrone droneStateChannel
-                        ) {
-
+    public DroneTello(ChannelDrone droneCommandChannel, ChannelDrone droneStateChannel ) {
         this.droneCommandChannel = droneCommandChannel;
         this.droneStateChannel = droneStateChannel;
     }
