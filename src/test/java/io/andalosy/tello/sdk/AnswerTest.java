@@ -12,7 +12,5 @@ class AnswerTest {
         Exception exception = assertThrows(NumberFormatException.class, () -> {
             answer.valueAsInteger();
         });
-
-        assertTrue(exception != null);
     }
 }
