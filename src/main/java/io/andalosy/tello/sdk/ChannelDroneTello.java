@@ -7,13 +7,13 @@ import java.net.*;
 import java.time.Duration;
 import java.time.Instant;
 
-public class TelloChannel {
+public class ChannelDroneTello implements ChannelDrone {
     private final DatagramSocket droneSocket;
     private final InetAddress droneAddress;
     private final int dronePort;
     private final DescriptiveStatistics commStats;
 
-    public TelloChannel(String droneIp, int dronePort) throws SocketException, UnknownHostException {
+    public ChannelDroneTello(String droneIp, int dronePort) throws SocketException, UnknownHostException {
         this.droneSocket = new DatagramSocket(dronePort);
         this.droneSocket.setSoTimeout(10000);
         this.droneAddress = InetAddress.getByName(droneIp);
@@ -21,8 +21,15 @@ public class TelloChannel {
         this.commStats = new DescriptiveStatistics();
     }
 
-    public boolean reachable() throws IOException {
-        return this.droneAddress.isReachable(10000);
+    public boolean reachable() {
+        try {
+            this.droneAddress.isReachable(10000);
+            return true;
+
+        } catch (IOException e) {
+            System.out.println("Error reaching drone ip!");
+            return false;
+        }
     }
 
     public byte[] receive() throws IOException {
@@ -43,7 +50,34 @@ public class TelloChannel {
         this.droneSocket.send(commandPacket);
     }
 
-    public double averageCommunicationTime(){
+    public double averageReceiveTimeMillis(){
         return commStats.getPercentile(90);
+    }
+
+    ///////////////////
+
+    public boolean isOk(String reply){
+        return !reply.contains("error");
+    }
+
+    public String command(String command){
+        try {
+            send(command.getBytes());
+            return answer();
+        }
+        catch (IOException e) {
+            return "error in drone communication : " + e.getMessage();
+        }
+    }
+
+    public String answer() {
+        try {
+            byte[] reply = receive();
+            return new String(reply).trim();
+        }
+        catch (IOException e) {
+            // networking issue
+            return "error in drone communication : " + e.getMessage();
+        }
     }
 }
